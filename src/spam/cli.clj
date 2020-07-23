@@ -7,7 +7,8 @@
   [["-s" "--song SONG_URI" "Song uri"]
    ["-p" "--playlist PLAYLIST_URI" "Playlist URI"]
    ["-t" "--token JWT_Token" "JWT Token"]
-   ["-n" "--times TIMES" "How many times to add the song"]])
+   ["-n" "--times TIMES" "How many times to add the song"]
+   ["-h", "--help"]])
 
 (defn missing-arguments
   "Finds any missing argument, returns them as a list"
@@ -48,6 +49,8 @@
   (let [{:keys [options arguments errors summary]} (parse-opts opts cli-options)]
     (let [missing (missing-arguments options #{:song :playlist :token :times})]
       (cond
+        (:help options)
+        {:status :ko :exit-message summary}
         errors
         {:status :ko :exit-message errors}
         (seq missing)
